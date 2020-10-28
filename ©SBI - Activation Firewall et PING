@@ -1,0 +1,3 @@
+netsh advfirewall set allprofiles state on
+netsh advfirewall firewall add rule name= "PING" dir=in action=allow protocol=ICMPv4
+Enable-NetFirewallRule -DisplayGroup "Bureau à Distance"
