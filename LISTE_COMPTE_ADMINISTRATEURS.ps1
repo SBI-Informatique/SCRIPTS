@@ -1,1 +1,1 @@
-Get-LocalGroupMember -Group "Administrateurs" | Select-Object Name | Format-Wide
+Get-LocalGroupMember -Group "Administrateurs" | Select-Object Name | Format-Table -HideTableHead
