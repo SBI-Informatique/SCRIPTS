@@ -8,9 +8,12 @@ IF ($windows -eq 10) {
 $drive_type = (Get-PhysicalDisk | Select "MediaType").MediaType.Contains("SSD")
     if($drive_type) {
     write-host "SSD `r`n"
+    exit 1
     } ELSE {
     write-host "HDD `r`n"
+    exit 2
     }
 } ELSE {
 write-host ""
+exit 0
 }
