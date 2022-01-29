@@ -5,8 +5,8 @@ $index= $version.IndexOf(".")
 [int]$windows= $version.Remove($index,$length-2)  
 
 IF ($windows -eq 10) {
-$TEST-REGISTRE = test-path -path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired'
-    if($TEST-REGISTRE) {
+$TEST_REGISTRE = test-path -path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired'
+    if($TEST_REGISTRE) {
     write-host "REBOOT-REQUIS"
     exit 1
     } ELSE {
@@ -14,13 +14,12 @@ $TEST-REGISTRE = test-path -path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersio
     exit 0
     }
 } ELSE {
-$TEST-REGISTRE = test-path -path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired'
-    if($TEST-REGISTRE) {
+    $TEST_REGISTRE = test-path -path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired'
+    if($TEST_REGISTRE) {
     write-host "REBOOT-REQUIS"
     exit 1
     } ELSE {
     write-host "OK"
     exit 0
     }
-}
 }
