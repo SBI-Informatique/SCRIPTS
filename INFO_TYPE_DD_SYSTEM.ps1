@@ -14,6 +14,12 @@ $drive_type = (Get-PhysicalDisk | Select "MediaType").MediaType.Contains("SSD")
     exit 2
     }
 } ELSE {
-write-host ""
-exit 0
+$DiskScore = (Get-WmiObject -Class Win32_WinSAT).DiskScore
+If ($DiskScore -gt 6.9) {
+    write-host "SSD `r`n"
+    exit 1
+    } ELSE {
+    write-host "HDD `r`n"
+    exit 2
+}
 }
