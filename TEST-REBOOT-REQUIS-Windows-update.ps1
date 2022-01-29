@@ -1,5 +1,3 @@
-test-path -path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired'
-
 #Test de la version de Windows
 $version= (Get-WmiObject Win32_OperatingSystem).Version
 $length= $version.Length
