@@ -1,3 +1,3 @@
-net user %1 %2 /add
-net user %1 /active:yes
+net user %5 %6 /add
+net user %5 /active:yes
 net localgroup administrateurs %1 /add
