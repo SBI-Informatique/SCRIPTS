@@ -1,4 +1,3 @@
-
 #Test de la version de Windows
 $version= (Get-WmiObject Win32_OperatingSystem).Version
 $length= $version.Length
