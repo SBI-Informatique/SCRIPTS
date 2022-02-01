@@ -4,22 +4,17 @@ $length= $version.Length
 $index= $version.IndexOf(".")
 [int]$windows= $version.Remove($index,$length-2)  
 
-IF ($windows -eq 10) {
-$drive_type = (Get-PhysicalDisk | Select "MediaType").MediaType.Contains("SSD")
-    if($drive_type) {
+$TEST_CLEE = (Test-Path -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Google Chrome\")
+
+IF ($TEST_CLEE) {
+    IF ($windows -eq 10) {
     Get-ItemPropertyValue -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Google Chrome\" -name "DisplayVersion"
     exit 1
     } ELSE {
-    write-host "ABSENT `r`n"
-    exit 2
+    write-host "WIN7 `r`n"
+    exit 1
     }
 } ELSE {
-$DiskScore = (Get-WmiObject -Class Win32_WinSAT).DiskScore
-If ($DiskScore -gt 6.9) {
-    write-host "SSD `r`n"
-    exit 1
-    } ELSE {
-    write-host "HDD `r`n"
+    write-host "ABSENT `r`n"
     exit 2
-}
 }
