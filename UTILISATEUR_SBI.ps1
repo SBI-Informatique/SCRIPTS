@@ -4,12 +4,15 @@ $length= $version.Length
 $index= $version.IndexOf(".")
 [int]$windows= $version.Remove($index,$length-2)  
 
+$User = "'"+$param1+"'"
+$Password = "'"+$param1+"'"
+
 IF ($windows -eq 10) {
 New-LocalUser -Name $param1 -Description "Son of Goku" -Password $param2
 exit 1
 } ELSE {
-cmd.exe /c net user 'sbi' '#Sbi84000#' /add
-cmd.exe /c net user 'sbi' /active:yes
-cmd.exe /c net localgroup administrateurs 'sbi' /add
+cmd.exe /c net user $User $Password /add
+cmd.exe /c net user $User /active:yes
+cmd.exe /c net localgroup administrateurs $User /add
 exit 1
 }
