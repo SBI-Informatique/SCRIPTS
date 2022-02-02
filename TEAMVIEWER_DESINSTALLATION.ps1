@@ -1,7 +1,6 @@
 # Déclaration des variables
-
-# $REGISTRE_SBI = Test-Path -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\SBI"
-# $REGISTRE_TEAMVIEWER = Test-Path -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\SBI\TEAMVIEWER"
+$TEST_PATH_SBI = Test-Path -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\SBI"
+$TEST_PATH_TEAMVIEWER = Test-Path -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\SBI\TEAMVIEWER"
 
 If (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\SBI\TEAMVIEWER' -Name PRESENT -ErrorAction SilentlyContinue) {
     $REGISTRE_TEAMVIEWER = $true
@@ -9,13 +8,14 @@ If (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\SBI\TEAMVIEWER
     $REGISTRE_TEAMVIEWER = $false
 }
 
-# TEST/CREATION de la clée de registre SBI
-#IF($REGISTRE_SBI -eq $false) {
-#	New-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\" -Name SBI
-#}
+TEST/CREATION de la clée de registre SBI
+IF($TEST_PATH_SBI -eq $false) {
+	New-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\" -Name SBI
+}
 
-# TEST/CREATION de la clée de registre TEAMVIEWER
-IF($REGISTRE_TEAMVIEWER -eq $false) {
+TEST/CREATION de la clée de registre TEAMVIEWER
+IF($TEST_PATH_TEAMVIEWER -eq $false) {
+New-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\SBI" -Name TEAMVIEWER
 Set-Itemproperty -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\SBI\TEAMVIEWER" -Name 'PRESENT' -value 1
 $REGISTREVALUE_TEAMVIEWER_PRESENT = (Get-ItemProperty -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\SBI\TEAMVIEWER\").PRESENT
 } ELSE {
