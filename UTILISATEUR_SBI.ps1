@@ -4,8 +4,8 @@ $length= $version.Length
 $index= $version.IndexOf(".")
 [int]$windows= $version.Remove($index,$length-2)  
 
-$User = "'"+$param1+"'"
-$Password = "'"+$param1+"'"
+$User = $args[0]
+$Password = $args[1]
 
 IF ($windows -eq 10) {
 New-LocalUser -Name $param1 -Description "Son of Goku" -Password $param2
