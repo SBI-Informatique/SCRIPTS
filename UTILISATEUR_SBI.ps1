@@ -8,7 +8,7 @@ $User = $args[0]
 $Password = $args[1]
 
 IF ($windows -eq 10) {
-New-LocalUser -Name $param1 -Description "Son of Goku" -Password $param2
+New-LocalUser -Name $User -Description "Utilisateur administrateur SBI" -Password $Password
 exit 1
 } ELSE {
 cmd.exe /c net user $User $Password /add
