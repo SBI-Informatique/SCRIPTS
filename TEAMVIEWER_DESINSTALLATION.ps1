@@ -8,12 +8,12 @@ If (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\SBI\TEAMVIEWER
     $REGISTRE_TEAMVIEWER = $false
 }
 
-TEST/CREATION de la clée de registre SBI
+# TEST/CREATION de la clée de registre SBI
 IF($TEST_PATH_SBI -eq $false) {
 	New-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\" -Name SBI
 }
 
-TEST/CREATION de la clée de registre TEAMVIEWER
+# TEST/CREATION de la clée de registre TEAMVIEWER
 IF($TEST_PATH_TEAMVIEWER -eq $false) {
 New-Item -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\SBI" -Name TEAMVIEWER
 Set-Itemproperty -Path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\SBI\TEAMVIEWER" -Name 'PRESENT' -value 1
