@@ -1,7 +1,7 @@
 $TYPE_OS = (get-wmiobject -computer LocalHost win32_computersystem).Model
 $TYPE_OS_VIRTUEL = $false
 
-IF ($TYPE_OS = "Virtual Machine" -or $TYPE_OS -eq "VMware7,1") {
+IF ($TYPE_OS = "Virtual Machine" -or "VMware7,1") {
 $TYPE_OS_VIRTUEL = $True
 }
 
