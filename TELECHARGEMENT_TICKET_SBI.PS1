@@ -8,5 +8,5 @@ mkdir C:\SBI\TICKET
     Start-BitsTransfer http://sbiinforkw.cluster020.hosting.ovh.net/Applications/TICKET/SBI_LOGO_TICKET.ico C:/SBI/TICKET/SBI_LOGO_TICKET.ico
 
     $Shortcut.TargetPath = $TargetFile
-    $Shortcut.IconLocation = "C:/SBI/TEAMVIEWER/SBI_LOGO_TICKET.ico";
+    $Shortcut.IconLocation = "C:/SBI/TICKET/SBI_LOGO_TICKET.ico";
     $Shortcut.Save()
