@@ -1,6 +1,6 @@
 
 $registryKey = "HKLM:\SOFTWARE\SBI\WINDOWS"
-$valueName = "ALLIMENTATION-FULL"
+$valueName = "ALIMENTATION-FULL"
 
 $value = Get-ItemProperty -Path $registryKey -Name $valueName
 
@@ -23,6 +23,6 @@ CREE LA CLEE SBI
   new-item -Path "HKLM:\SOFTWARE" -Name "SBI"
 CREE LA CLEE WINDOWS DANS SBI
   new-item -Path "HKLM:\SOFTWARE\SBI" -Name "WINDOWS"
-AJOUTER LA CLEE DWORD ALLIMENTATION-FULL
-  New-ItemProperty -Path "HKLM:\SOFTWARE\SBI\WINDOWS" -Name "ALLIMENTATION-FULL" -Value "1" -PropertyType "DWORD"
+AJOUTER LA CLEE DWORD ALIMENTATION-FULL
+  New-ItemProperty -Path "HKLM:\SOFTWARE\SBI\WINDOWS" -Name "ALIMENTATION-FULL" -Value "1" -PropertyType "DWORD"
 #>
