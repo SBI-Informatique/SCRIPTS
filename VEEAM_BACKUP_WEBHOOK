@@ -170,8 +170,6 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookValue.VEEAM_W
     # Envoi de la requête au webhook Discord
     ########################
     Invoke-RestMethod -Uri $webhookUrl -Method Post -ContentType "application/json" -Body $body
-
-    Write-Output $body
 } else {
     Write-Output "VEEAM_MONITORING ou VEEAM_WEBHOOK inexistant"
 }
