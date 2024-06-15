@@ -19,13 +19,13 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEA
    
     # Logiciel recherche
     $LogicielRecherche = "Veeam Backup & Replication Server"
-    # Chemin de la clÃ© de registre oÃ¹ se trouvent les informations sur les logiciels installÃ©s
+    # Chemin de la clé de registre où se trouvent les informations sur les logiciels installés
     $regPath = "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
     # Recherchez le logiciel par nom partiel
     $softwareKeys = Get-ItemProperty -Path $regPath | Where-Object { $_.DisplayName -like "*$LogicielRecherche*" }
-    #Solution VEEAM
+    # Solution VEEAM
     $VeeamSolution = $softwareKeys.DisplayName
-    #Version de VEEAM
+    # Version de VEEAM
     $VeeamBackupAndReplicationVersion = $softwareKeys.DisplayVersion
 
     # Variables pour l'embed
@@ -53,11 +53,17 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEA
     $jobsDetails = @()
 
     foreach ($job in $jobs) {
+        $scheduleOptions = Get-VBRJobScheduleOptions -Job $job
+        $nextRun = $scheduleOptions.NextRun
+        $nextRunTime = Get-Date $nextRun -Format "HH:mm:ss"
+
         # Exemple d'utilisation des propriétés du job, à adapter en fonction de vos besoins
         $jobDetails = @{
             Name = $job.Name
-            LastState = $job.GetLastState()  # Méthode à adapter selon la structure de votre objet Veeam Job
-            LastResult = $job.GetLastResult()  # Méthode à adapter selon la structure de votre objet Veeam Job
+            LastState = $job.GetLastState()
+            LastResult = $job.GetLastResult()
+            Retention_jours = $job.GetOptions().BackupStorageOptions.RetainDaysToKeep
+            NextRunTime = $nextRunTime
         }
 
         # Incrémenter les compteurs en fonction de l'état du job
@@ -81,7 +87,7 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEA
         description = "- **Total Job(s)** x **$jobNameCount**`n- $IconeValide Succes(s) x **$successCount**`n- $IconeWarning Warning(s) x **$warningCount**`n- $IconeEchec Echec(s) x **$failedCount**`n- $IconeInconnu Inconnu(s) x **$noneCount**`n------------------------------------"
         color = $color
         footer = @{
-            text = "Resultat issu de la solution [$VeeamSolution] version [$VeeamBackupAndReplicationVersion]"
+            text = "Resultats provenant de [$VeeamSolution] version [$VeeamBackupAndReplicationVersion]"
             icon_url = $footerIconURL
         }
         thumbnail = @{
@@ -98,19 +104,19 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEA
             [string]$authorName,
             [string]$color,
             [object[]]$jobs,
-            [string]$thumbnailUrl  # Ajoutez ce paramètre pour l'URL du thumbnail
+            [string]$thumbnailUrl
         )
 
         $fields = @()
 
         foreach ($job in $jobs) {
             $fieldName = $job.Name
-            $fieldValue = "- Statut du Job: $($job.LastState)`n- Resultat du job : $($job.LastResult)`n---------------------"
+            $fieldValue = "- Statut : [$($job.LastState)]`n- Resultat : [$($job.LastResult)]`n- Retention (jours) : [$($job.Retention_jours)]`n- Heure de debut : [$($job.NextRunTime)]`n---------------------"
 
             $field = @{
                 name = $fieldName
                 value = $fieldValue
-                inline = $true
+                inline = $false
             }
 
             $fields += $field
