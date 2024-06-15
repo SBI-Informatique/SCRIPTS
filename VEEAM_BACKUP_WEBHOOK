@@ -105,7 +105,7 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEA
 
         foreach ($job in $jobs) {
             $fieldName = $job.Name
-            $fieldValue = "- Statut du Job: $($job.LastState)`n- Resultat du job : $($job.LastResult)`n-----------------------"
+            $fieldValue = "- Statut du Job: $($job.LastState)`n- Resultat du job : $($job.LastResult)`n---------------------"
 
             $field = @{
                 name = $fieldName
