@@ -9,6 +9,8 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEA
     # URL du webhook Discord
     $webhookUrl = $webhookUrlValue.VEEAM_WEBHOOK
 
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
     # ICONES
     $IconeValide = ":white_check_mark:"
     $IconeWarning = ":warning:"
