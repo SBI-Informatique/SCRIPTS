@@ -110,7 +110,7 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEA
             $field = @{
                 name = $fieldName
                 value = $fieldValue
-                inline = $false
+                inline = $true
             }
 
             $fields += $field
