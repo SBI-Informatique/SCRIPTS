@@ -14,7 +14,13 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEA
     $IconeWarning = ":warning:"
     $IconeEchec = ":x:"
     $IconeInconnu = ":grey_question:"
-
+   
+    # Logiciel recherche
+    $LogicielRecherche = "Veeam Backup & Replication Server"
+    # Chemin de la clÃ© de registre oÃ¹ se trouvent les informations sur les logiciels installÃ©s
+    $regPath = "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
+    # Recherchez le logiciel par nom partiel
+    $softwareKeys = Get-ItemProperty -Path $regPath | Where-Object { $_.DisplayName -like "*$LogicielRecherche*" }
     #Solution VEEAM
     $VeeamSolution = $softwareKeys.DisplayName
     #Version de VEEAM
