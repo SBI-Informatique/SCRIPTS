@@ -15,6 +15,11 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEA
     $IconeEchec = ":x:"
     $IconeInconnu = ":grey_question:"
 
+    #Solution VEEAM
+    $VeeamSolution = $softwareKeys.DisplayName
+    #Version de VEEAM
+    $VeeamBackupAndReplicationVersion = $softwareKeys.DisplayVersion
+
     # Variables pour l'embed
     $hostname = $env:COMPUTERNAME
     $time = Get-Date
@@ -68,7 +73,7 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEA
         description = "- **Total Job(s)** x **$jobNameCount**`n- $IconeValide Succes(s) x **$successCount**`n- $IconeWarning Warning(s) x **$warningCount**`n- $IconeEchec Echec(s) x **$failedCount**`n- $IconeInconnu Inconnu(s) x **$noneCount**`n------------------------------------"
         color = $color
         footer = @{
-            text = "Resultat issu de la solution [Veeam Backup & Replication Server] version [$VeeamBackupAndReplicationVersion]"
+            text = "Resultat issu de la solution [$VeeamSolution] version [$VeeamBackupAndReplicationVersion]"
             icon_url = $footerIconURL
         }
         thumbnail = @{
