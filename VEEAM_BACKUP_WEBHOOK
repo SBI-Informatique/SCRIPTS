@@ -3,41 +3,29 @@ $regPath = "HKLM:\SOFTWARE\SBI"
 
 # Vérifier si la clé de registre VEEAM_MONITORING existe et si sa valeur est 1
 $monitoringValue = Get-ItemProperty -Path $regPath -Name "VEEAM_MONITORING" -ErrorAction SilentlyContinue
-$webhookValue = Get-ItemProperty -Path $regPath -Name "VEEAM_WEBHOOK" -ErrorAction SilentlyContinue
+$webhookUrlValue = Get-ItemProperty -Path $regPath -Name "VEEAM_WEBHOOK" -ErrorAction SilentlyContinue
 
-if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookValue.VEEAM_WEBHOOK) {
-    ######################## 
+if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEAM_WEBHOOK) {
     # URL du webhook Discord
-    ########################
-    $webhookUrl = $webhookValue.VEEAM_WEBHOOK
+    $webhookUrl = $webhookUrlValue.VEEAM_WEBHOOK
 
-    ########################
     # ICONES
-    ########################
     $IconeValide = ":white_check_mark:"
     $IconeWarning = ":warning:"
     $IconeEchec = ":x:"
     $IconeInconnu = ":grey_question:"
 
-    ########################
     # Variables pour l'embed
-    ########################
-    $hostname = hostname
-    $time = date
-    $title = "Bilan des sauvegardes de **[$hostname]**"
-    $description = "- **Total Job(s)** x **$jobNameCount**`n- $IconeValide Succes(s) x **$successCount**`n- $IconeWarning Warning(s) x **$warningCount**`n- $IconeEchec Echec(s) x **$failedCount**`n- $IconeInconnu Inconnu(s) x **$noneCount**`n------------------------------------"
+    $hostname = $env:COMPUTERNAME
+    $time = Get-Date
     $color = 4425837 # Couleur de l'embed en code hexadécimal (ici vert)
-    $footerText = "Resultat issu de la solution [$VeeamSolution] version [$VeeamBackupAndReplicationVersion]"
+    $footerText = "Resultat issu de la solution [Veeam Backup & Replication Server] version [$VeeamBackupAndReplicationVersion]"
     $footerIconURL = "https://aadcdn.msftauthimages.net/dbd5a2dd-92laa6uxe8cm6o2laysa0pnym111fwffj8zubx1pin4/logintenantbranding/0/bannerlogo?ts=638349674629553278"
     $thumbnailURL = "https://upload.wikimedia.org/wikipedia/commons/9/93/Veeam_logo.png"
     $thumbnailURLSuccess = "https://em-content.zobj.net/source/icons8/373/check-mark-button_2705.png"
     $thumbnailURLWarning = "https://em-content.zobj.net/source/apple/125/warning-sign_26a0.png"
     $thumbnailURLFailed = "https://em-content.zobj.net/source/apple/125/cross-mark_274c.png"
     $thumbnailURLNone = "https://em-content.zobj.net/source/apple/28/white-question-mark-ornament_2754.png"
-
-    ########################
-    # Variables issue de VEEAM (exemples)
-    ########################
 
     # Récupération des jobs depuis Veeam
     $jobs = Get-VBRJob
@@ -74,15 +62,13 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookValue.VEEAM_W
     # Nombre total de jobs
     $jobNameCount = $jobs.Count
 
-    ########################
     # Création de l'embed global
-    ########################
     $embedGlobal = @{
-        title = $title
-        description = $description
+        title = "Bilan des sauvegardes de **[$hostname]**"
+        description = "- **Total Job(s)** x **$jobNameCount**`n- $IconeValide Succes(s) x **$successCount**`n- $IconeWarning Warning(s) x **$warningCount**`n- $IconeEchec Echec(s) x **$failedCount**`n- $IconeInconnu Inconnu(s) x **$noneCount**`n------------------------------------"
         color = $color
         footer = @{
-            text = $footerText
+            text = "Resultat issu de la solution [Veeam Backup & Replication Server] version [$VeeamBackupAndReplicationVersion]"
             icon_url = $footerIconURL
         }
         thumbnail = @{
@@ -90,9 +76,7 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookValue.VEEAM_W
         }
     }
 
-    ########################
     # Création des embeds détaillés
-    ########################
     $embedsDetailed = @()
 
     # Fonction pour créer un embed détaillé par statut
@@ -107,7 +91,7 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookValue.VEEAM_W
         $fields = @()
 
         foreach ($job in $jobs) {
-            $fieldName = $job.Name
+            $fieldName = "$authorName $($job.Name)"
             $fieldValue = "- Statut du Job: $($job.LastState)`n- Resultat du job : $($job.LastResult)`n-----------------------"
 
             $field = @{
@@ -152,24 +136,21 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookValue.VEEAM_W
         $embedsDetailed += $embedUnknown
     }
 
-    ########################
     # Construction du body JSON
-    ########################
     $body = @{
         content = $null
         embeds = @($embedGlobal) + $embedsDetailed
         attachments = @()
     } | ConvertTo-Json -Depth 20
 
-    ########################
     # Vérification du JSON produit
-    ########################
     Write-Output $body
 
-    ########################
     # Envoi de la requête au webhook Discord
-    ########################
     Invoke-RestMethod -Uri $webhookUrl -Method Post -ContentType "application/json" -Body $body
-} else {
-    Write-Output "VEEAM_MONITORING ou VEEAM_WEBHOOK inexistant"
+
+    Write-Output $body
+}
+else {
+    Write-Output "Conditions non remplies pour exécuter le script."
 }
