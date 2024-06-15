@@ -107,9 +107,12 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEA
             [string]$thumbnailUrl
         )
 
+        # Trier les jobs par heure de début
+        $sortedJobs = $jobs | Sort-Object { [DateTime]::ParseExact($_.NextRunTime, "HH:mm:ss", $null) }
+
         $fields = @()
 
-        foreach ($job in $jobs) {
+        foreach ($job in $sortedJobs) {
             $fieldName = $job.Name
             $fieldValue = "- Statut : [$($job.LastState)]`n- Resultat : [$($job.LastResult)]`n- Retention (jours) : [$($job.Retention_jours)]`n- Heure de debut : [$($job.NextRunTime)]`n---------------------"
 
