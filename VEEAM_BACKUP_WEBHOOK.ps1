@@ -138,11 +138,6 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEA
     }
 
     # Créer les embeds détaillés pour chaque statut
-    if ($noneCount -gt 0) {
-        $embedUnknown = CreateDetailedEmbed -authorName "INCONNU" -color 6250335 -jobs ($jobsDetails | where { $_.LastResult -eq 'None' }) -thumbnailUrl $thumbnailURLNone
-        $embedsDetailed += $embedUnknown
-    }
-    
     if ($failedCount -gt 0) {
         $embedFailed = CreateDetailedEmbed -authorName "ECHEC" -color 16711680 -jobs ($jobsDetails | where { $_.LastResult -eq 'Failed' }) -thumbnailUrl $thumbnailURLFailed
         $embedsDetailed += $embedFailed
@@ -151,6 +146,11 @@ if ($monitoringValue.VEEAM_MONITORING -eq 1 -and $null -ne $webhookUrlValue.VEEA
     if ($warningCount -gt 0) {
         $embedWarning = CreateDetailedEmbed -authorName "WARNING" -color 13542919 -jobs ($jobsDetails | where { $_.LastResult -eq 'Warning' }) -thumbnailUrl $thumbnailURLWarning
         $embedsDetailed += $embedWarning
+    }
+
+    if ($noneCount -gt 0) {
+        $embedUnknown = CreateDetailedEmbed -authorName "INCONNU" -color 6250335 -jobs ($jobsDetails | where { $_.LastResult -eq 'None' }) -thumbnailUrl $thumbnailURLNone
+        $embedsDetailed += $embedUnknown
     }
     
     if ($successCount -gt 0) {
