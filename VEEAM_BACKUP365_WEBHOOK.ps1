@@ -16,6 +16,7 @@ if ($monitoringValue365.VEEAM365_MONITORING -eq 1 -and $null -ne $webhookUrlValu
     $IconeWarning = ":warning:"
     $IconeEchec = ":x:"
     $IconeInconnu = ":grey_question:"
+    $IconeRunning = ":hourglass_flowing_sand:"
    
     # Logiciel recherche
     $LogicielRecherche365 = "Veeam Backup for Microsoft 365"
@@ -39,6 +40,7 @@ if ($monitoringValue365.VEEAM365_MONITORING -eq 1 -and $null -ne $webhookUrlValu
     $thumbnailURLWarning = "https://em-content.zobj.net/source/apple/125/warning-sign_26a0.png"
     $thumbnailURLFailed = "https://em-content.zobj.net/source/apple/125/cross-mark_274c.png"
     $thumbnailURLNone = "https://em-content.zobj.net/source/apple/28/white-question-mark-ornament_2754.png"
+    $thumbnailURLRunning = "https://em-content.zobj.net/source/apple/81/hourglass-with-flowing-sand_23f3.png"
 
     # Récupération des jobs depuis Veeam
     $jobs365 = Get-VBOJob
@@ -51,6 +53,7 @@ if ($monitoringValue365.VEEAM365_MONITORING -eq 1 -and $null -ne $webhookUrlValu
     $warning365Count = 0
     $failed365Count = 0
     $none365Count = 0
+    $running365Count = 0
 
     # Tableau pour stocker les détails des jobs
     $jobs365Details = @()
@@ -73,6 +76,7 @@ if ($monitoringValue365.VEEAM365_MONITORING -eq 1 -and $null -ne $webhookUrlValu
             "Warning" { $warning365Count++ }
             "Failed" { $failed365Count++ }
             "None" { $none365Count++ }
+            "Running" { $running365Count++ }
         }
     
         # Ajouter les détails du job au tableau
@@ -82,7 +86,7 @@ if ($monitoringValue365.VEEAM365_MONITORING -eq 1 -and $null -ne $webhookUrlValu
     # Création de l'embed global
     $embedGlobal365 = @{
         title = "Bilan des sauvegardes 365 de **[$hostname]**"
-        description = "- **Total Job(s)** x **$jobName365Count**`n- $IconeValide Succes(s) x **$success365Count**`n- $IconeWarning Warning(s) x **$warning365Count**`n- $IconeEchec Echec(s) x **$failed365Count**`n- $IconeInconnu Inconnu(s) x **$none365Count**`n------------------------------------"
+        description = "- **Total Job(s)** x **$jobName365Count**`n- $IconeValide Succes(s) x **$success365Count**`n- $IconeWarning Warning(s) x **$warning365Count**`n- $IconeEchec Echec(s) x **$failed365Count**`n- $IconeInconnu Inconnu(s) x **$none365Count**`n- $IconeRunning En cour(s) x **$running365Count**`n------------------------------------"
         color = $color
         footer = @{
             text = $footerText
@@ -151,11 +155,16 @@ if ($monitoringValue365.VEEAM365_MONITORING -eq 1 -and $null -ne $webhookUrlValu
         $embedUnknown = CreateDetailedEmbed -authorName "INCONNU" -color 6250335 -jobs ($jobs365Details | Where-Object { $_.LastStatus -eq 'None' }) -thumbnailUrl $thumbnailURLNone
         $embeds365Detailed += $embedUnknown
     }
+        if ($running365Count -gt 0) {
+        $embedWarning = CreateDetailedEmbed -authorName "RUNNING" -color 13542919 -jobs ($jobs365Details | Where-Object { $_.LastStatus -eq 'Running' }) -thumbnailUrl $thumbnailURLRunning
+        $embeds365Detailed += $embedWarning
+    }
     
     if ($success365Count -gt 0) {
         $embedSuccess = CreateDetailedEmbed -authorName "SUCCES" -color 638268 -jobs ($jobs365Details | Where-Object { $_.LastStatus -eq 'Success' }) -thumbnailUrl $thumbnailURLSuccess
         $embeds365Detailed += $embedSuccess
     }
+
 
     # Construction du body JSON
     $body = @{
