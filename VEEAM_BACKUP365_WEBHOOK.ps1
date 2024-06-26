@@ -57,16 +57,16 @@ if ($monitoringValue365.VEEAM365_MONITORING -eq 1 -and $null -ne $webhookUrlValu
 
     foreach ($job365 in $jobs365) {
         $nextRun365 = $job365.NextRun
-        $nextRun365Time = Get-Date $nextRun365 -Format "HH:mm:ss"
-
+        $nextRun365Time = $nextRun365.ToString("dd/MM/yyyy HH:mm:ss")
+    
         # Exemple d'utilisation des propriétés du job, à adapter en fonction de vos besoins
         $job365Details = @{
             Name = $job365.Name
             LastStatus = $job365.LastStatus
-            LastRun = $job365.LastRun
+            LastRun = $job365.LastRun.ToString("dd/MM/yyyy HH:mm:ss")
             NextRunTime = $nextRun365Time
         }
-
+    
         # Incrémenter les compteurs en fonction de l'état du job
         switch ($job365Details.LastStatus) {
             "Success" { $success365Count++ }
@@ -74,13 +74,10 @@ if ($monitoringValue365.VEEAM365_MONITORING -eq 1 -and $null -ne $webhookUrlValu
             "Failed" { $failed365Count++ }
             "None" { $none365Count++ }
         }
-
+    
         # Ajouter les détails du job au tableau
         $jobs365Details += $job365Details
     }
-
-    # Nombre total de jobs
-    $jobName365Count = $jobs365.Count
 
     # Création de l'embed global
     $embedGlobal365 = @{
@@ -107,25 +104,25 @@ if ($monitoringValue365.VEEAM365_MONITORING -eq 1 -and $null -ne $webhookUrlValu
             [object[]]$jobs,
             [string]$thumbnailUrl
         )
-
+    
         # Trier les jobs par heure de début
-        $sorted365Jobs = $jobs | Sort-Object { [DateTime]::ParseExact($_.NextRunTime, "HH:mm:ss", $null) }
-
+        $sorted365Jobs = $jobs | Sort-Object { [DateTime]::ParseExact($_.NextRunTime, "dd/MM/yyyy HH:mm:ss", $null) }
+    
         $fields = @()
-
+    
         foreach ($job365 in $sorted365Jobs) {
             $fieldName = $job365.Name
             $fieldValue = "- Resultat : [$($job365.LastStatus)]`n- Derniere execution : [$($job365.LastRun)]`n- Prochaine execution : [$($job365.NextRunTime)]`n---------------------"
-
+    
             $field = @{
                 name = $fieldName
                 value = $fieldValue
                 inline = $false
             }
-
+    
             $fields += $field
         }
-
+    
         return @{
             color = $color
             fields = $fields
@@ -137,6 +134,7 @@ if ($monitoringValue365.VEEAM365_MONITORING -eq 1 -and $null -ne $webhookUrlValu
             }
         }
     }
+
 
     # Créer les embeds détaillés pour chaque statut
     if ($failed365Count -gt 0) {
