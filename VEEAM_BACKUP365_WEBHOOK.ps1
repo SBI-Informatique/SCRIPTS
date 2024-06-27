@@ -33,7 +33,8 @@ if ($monitoringValue365.VEEAM365_MONITORING -eq 1 -and $null -ne $webhookUrlValu
     $hostname = $env:COMPUTERNAME
     $time = Get-Date
     $color = 4425837 # Couleur de l'embed en code hexadécimal (ici vert)
-    $Veeam365LicenceDate = (Get-VBOLicense).ExpirationDate
+    $Veeam365LicenceDateHeure = (Get-VBOLicense).ExpirationDate
+    $Veeam365LicenceDate = $Veeam365LicenceDateHeure.ToString("dd/MM/yyyy HH:mm:ss")
     $footerText = "Resultat issu de la solution [$VeeamSolution365] version [$Veeam365Version] expiration le [$Veeam365LicenceDate]"
     $footerIconURL = "https://aadcdn.msftauthimages.net/dbd5a2dd-92laa6uxe8cm6o2laysa0pnym111fwffj8zubx1pin4/logintenantbranding/0/bannerlogo?ts=638349674629553278"
     $thumbnailURL = "https://upload.wikimedia.org/wikipedia/commons/9/93/Veeam_logo.png"
