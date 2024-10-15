@@ -1,5 +1,6 @@
 # Définir le chemin de la clé de registre
 $regPath = "HKLM:\SOFTWARE\SBI"
+$hostname = hostname
 
 # Lire la valeur de la clé de registre DISCORD
 $discordUrl = (Get-ItemProperty -Path $regPath -Name "DISCORD").DISCORD
@@ -50,6 +51,10 @@ if ($connexionValue -eq 1) {
                     title = "Connexion distante"
                     color = 1788072
                     fields = @(
+                        @{
+                            name = ":computer: Hostname :"
+                            value = "$hostname"
+                        }
                         @{
                             name = ":calendar: Date et Heure :"
                             value = "$RDP_Heure_Date"
